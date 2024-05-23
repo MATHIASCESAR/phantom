@@ -8,12 +8,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Configuração do banco de dados
-DATABASE_URL = "sqlite:///clientes.db"
+DATABASE_URL = "sqlite:///servicos.db"
 
 Base = declarative_base()
 
-class Cliente(Base):
-    __tablename__ = 'clientes'
+class Servico(Base):
+    __tablename__ = 'servicos'
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
     email = Column(String, nullable=False)
@@ -28,10 +28,10 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def main():
-    st.title('Cadastro de Clientes')
+    st.title('Cadastro de Servicos')
 
     # Formulário de Cadastro de Cliente
-    st.header('Informações do Cliente')
+    st.header('Informações do Serviço')
     nome = st.text_input('Nome')
     email = st.text_input('Email')
     telefone = st.text_input('Telefone')
@@ -40,13 +40,13 @@ def main():
     st.header('Upload de Arquivo DICOM')
     uploaded_file = st.file_uploader('Escolha um arquivo DICOM', type=['dcm'])
 
-    if st.button('Cadastrar Cliente e Carregar Arquivo'):
+    if st.button('Cadastrar Serviço e Carregar Arquivo'):
         if nome and email and telefone and uploaded_file is not None:
             # Salvar informações do cliente no banco de dados
-            novo_cliente = Cliente(nome=nome, email=email, telefone=telefone)
+            novo_cliente = Servico(nome=nome, email=email, telefone=telefone)
             session.add(novo_cliente)
             session.commit()
-            st.success(f'Cliente {nome} cadastrado com sucesso!')
+            st.success(f'Servico {nome} cadastrado com sucesso!')
 
             # Criar pasta com o nome do cliente
             client_folder = os.path.join('clientes', nome)
@@ -72,11 +72,11 @@ def main():
             st.error('Por favor, preencha todos os campos e faça o upload de um arquivo DICOM.')
 
     # Exibir dados da tabela clientes
-    st.header('Clientes Cadastrados')
-    if st.button('Ver Clientes Cadastrados'):
-        conn = sqlite3.connect('clientes.db')
+    st.header('Servicos Cadastrados')
+    if st.button('Ver Servicos Cadastrados'):
+        conn = sqlite3.connect('servicos.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM clientes")
+        cursor.execute("SELECT * FROM servicos")
         clientes = cursor.fetchall()
         conn.close()
 
