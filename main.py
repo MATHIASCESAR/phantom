@@ -49,7 +49,7 @@ def main():
             st.success(f'Servico {nome} cadastrado com sucesso!')
 
             # Criar pasta com o nome do cliente
-            client_folder = os.path.join('clientes', nome)
+            client_folder = os.path.join('servicos', nome)
             os.makedirs(client_folder, exist_ok=True)
 
             # Salvar o arquivo na pasta do cliente
