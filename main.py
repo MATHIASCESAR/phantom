@@ -17,7 +17,7 @@ with col1:
     st.write("")
 
 with col2:
-    logo_image = "https://github.com/MATHIASCESAR/phantom/blob/meu_app/Logo_INCA.jpg"
+    logo_image = "https://github.com/MATHIASCESAR/phantom/Logo_INCA.jpg?raw=true"
     st.image(logo_image, width=150)
 
 with col3:
