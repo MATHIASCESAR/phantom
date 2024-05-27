@@ -1,3 +1,4 @@
 streamlit
 pydicom
 sqlalchemy
+streamlit_option_menu
