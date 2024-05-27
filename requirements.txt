@@ -1,3 +1,4 @@
 streamlit
 pydicom
 sqlalchemy
+sqlite3

@@ -1,87 +1,79 @@
-
 import os
 import streamlit as st
-import pydicom
-import sqlite3
-from sqlalchemy import create_engine, Column, String, Integer
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from streamlit_option_menu import option_menu
 
-# Configuração do banco de dados
-DATABASE_URL = "sqlite:///servicos.db"
+from phantomacr import phantomacr
+from phantomcbr import phantomcbr
 
-Base = declarative_base()
 
-class Servico(Base):
-    __tablename__ = 'servicos'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    nome = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    telefone = Column(String, nullable=False)
+st.set_page_config(
+    page_title='Seja Bem-Vindo'
+)
 
-# Criar a engine do banco de dados
-engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(engine)
+# Centralizando as imagens
+col1, col2, col3 = st.sidebar.columns([1, 1, 3])
 
-# Criar a sessão do banco de dados
-Session = sessionmaker(bind=engine)
-session = Session()
+with col1:
+    st.write("")
+
+with col2:
+    logo_image = "logo_INCA.jpg"
+    st.image(logo_image, width=150)
+
+with col3:
+    st.write("")
+
+
+class MultiApp:
+
+    def __init__(self):
+        self.apps = []
+
+    def add_app(self, title, func):
+        self.apps.append({
+            "title": title,
+            "function": func
+        })
+
+    def run(self):
+        with st.sidebar:
+            selected = option_menu(
+                menu_title='Menu',
+                options=['Home Page', 'Phantom ACR', 'Phantom CBR', 'Contato'],
+                icons=['house-fill', 'cloud-upload-fill', 'cloud-upload-fill', 'envelope-heart-fill'],
+                menu_icon='menu-app-fill',
+                default_index=0,
+            )
+
+        # Criar diretório com o nome da página selecionada
+        if not os.path.exists(selected):
+            os.makedirs(selected)
+
+        for app in self.apps:
+            if app['title'] == selected:
+                app['function']()
+
 
 def main():
-    st.title('Cadastro de Servicos')
+    st.markdown("<h2 style='text-align: center; color: bold;'> Coleta das Imagens Phantom </h2>", unsafe_allow_html=True)
 
-    # Formulário de Cadastro de Cliente
-    st.header('Informações do Serviço')
-    nome = st.text_input('Nome')
-    email = st.text_input('Email')
-    telefone = st.text_input('Telefone')
+    st.markdown('#### Instruções para envio e armazenamento da imagem')
+    st.write('''
+        1) Posicione o objeto simulador no mamógrafo, de forma que fique centralizado no detector;
+        2) Abaixe a bandeja de compressão para que ela apenas toque a parte superior do *phantom*;
+        3) Verifique se o sensor do Controle Automático de Exposição (CAE) está abaixo do centro do *phantom* e no mesmo posicionamento de aquisição anteriores;
+        4) Faça uma exposição usando os parâmetros clinicamente utilizados conforme o modelo do Phantom (ACR ou CBR);
+        5) Informar o nome do Serviço;
+        6) Selecionar a imagem e fazer o *UPLOAD*, conforme instruções;
+    ''')
 
-    # Upload de Arquivo DICOM
-    st.header('Upload de Arquivo DICOM')
-    uploaded_file = st.file_uploader('Escolha um arquivo DICOM', type=['dcm'])
+    st.write('---')
 
-    if st.button('Cadastrar Serviço e Carregar Arquivo'):
-        if nome and email and telefone and uploaded_file is not None:
-            # Salvar informações do cliente no banco de dados
-            novo_cliente = Servico(nome=nome, email=email, telefone=telefone)
-            session.add(novo_cliente)
-            session.commit()
-            st.success(f'Servico {nome} cadastrado com sucesso!')
 
-            # Criar pasta com o nome do cliente
-            client_folder = os.path.join('servicos', nome)
-            os.makedirs(client_folder, exist_ok=True)
+# Inicializar o aplicativo
+app = MultiApp()
+app.add_app("Home Page", main)
+app.add_app("Phantom ACR", phantomacr)
+app.add_app("Phantom CBR", phantomcbr)
 
-            # Salvar o arquivo na pasta do cliente
-            file_path = os.path.join(client_folder, uploaded_file.name)
-            with open(file_path, 'wb') as f:
-                f.write(uploaded_file.getbuffer())
-            st.success(f'Arquivo {uploaded_file.name} salvo na pasta {client_folder} com sucesso!')
-
-            # Exibir algumas informações do arquivo DICOM
-            try:
-                dicom_data = pydicom.dcmread(file_path)
-                st.subheader('Informações do Arquivo DICOM')
-                st.text(f'Patient Name: {dicom_data.PatientName}')
-                st.text(f'Modality: {dicom_data.Modality}')
-                st.text(f'Study Date: {dicom_data.StudyDate}')
-            except Exception as e:
-                st.error(f'Erro ao ler o arquivo DICOM: {e}')
-
-        else:
-            st.error('Por favor, preencha todos os campos e faça o upload de um arquivo DICOM.')
-
-    # Exibir dados da tabela clientes
-    st.header('Servicos Cadastrados')
-    if st.button('Ver Servicos Cadastrados'):
-        conn = sqlite3.connect('servicos.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM servicos")
-        clientes = cursor.fetchall()
-        conn.close()
-
-        for cliente in clientes:
-            st.text(f'ID: {cliente[0]}, Nome: {cliente[1]}, Email: {cliente[2]}, Telefone: {cliente[3]}')
-
-if __name__ == '__main__':
-    main()
+app.run()
