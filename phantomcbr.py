@@ -34,7 +34,7 @@ def phantomcbr():
         st.write("")
 
     with col2:
-        logo_image = "phantomCBR.jpg"
+        logo_image = "https://github.com/MATHIASCESAR/phantom/blob/meu_app/phantomCBR.jpg"
         st.image(logo_image, width=500)
 
     #st.header('Informações do Serviço')

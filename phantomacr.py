@@ -32,7 +32,7 @@ def phantomacr():
         st.write("")
 
     with col2:
-        logo_image = "phantomACR.jpg"
+        logo_image = "https://github.com/MATHIASCESAR/phantom/blob/meu_app/phantomACR.jpg"
         st.image(logo_image, width=500)
 
     st.markdown('<h3>Informações do Serviço</h3>', unsafe_allow_html=True)
