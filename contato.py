@@ -21,7 +21,8 @@ def contato():
     col8, col9, col0 = st.columns([35, 15, 35])
 
     with col8:
-        st.markdown('**INCA - Instituto Nacional do Câncer**')
+        st.markdown('**INCA-Instituto Nacional do Câncer**')
+        st.caption('**_PQM-Programa de Qualidade em Mamográfia_**')
         st.markdown('<h8>sonia.silva@inca.gov.br</h8>', unsafe_allow_html=True)
         st.markdown('<h8>leonardo.travassos@inca.gov.br</h8>', unsafe_allow_html=True)
 
@@ -29,7 +30,7 @@ def contato():
         st.write("")
 
     with col0:
-        st.markdown('**UFG - Universidade Federal de Goiás**')
+        st.markdown('**UFG-Universidade Federal de Goiás**')
         st.markdown('<h8>gustavolaureano@ufg.br</h8>', unsafe_allow_html=True)
         st.markdown('<h8>mathiascassis@hotmail.com</h8>', unsafe_allow_html=True)
         st.markdown('<h8>crsaguiar2@gmail.com</h8>', unsafe_allow_html=True)
