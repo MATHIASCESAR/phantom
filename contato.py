@@ -33,7 +33,7 @@ def contato():
         st.write("")
 
     with col7:
-        logo_image = "https://github.com/MATHIASCESAR/phantom/blob/meu_app/INF_UFG.png?raw=true"
+        logo_image = "https://github.com/MATHIASCESAR/phantom/blob/meu_app/Inf_UFG.png?raw=true"
         st.image(logo_image, width=150)
     
  
