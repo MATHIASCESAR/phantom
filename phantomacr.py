@@ -51,11 +51,11 @@ def phantomacr():
         logo_image = "https://github.com/MATHIASCESAR/phantom/blob/meu_app/phantomACR.jpg?raw=true"
         st.image(logo_image, width=500)
 
-    st.markdown('<h3>Informações do Serviço</h3>', unsafe_allow_html=True)
+    st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
     
     with st.form(key='cliente_form', clear_on_submit=True):
         nome = st.text_input('Nome')
-        st.markdown('<h3>Upload da Imagem Phantom:</h3>', unsafe_allow_html=True)
+        st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
         uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
 
         submit_button = st.form_submit_button('Confirmar')
