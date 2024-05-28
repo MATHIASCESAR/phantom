@@ -4,7 +4,7 @@ from streamlit_option_menu import option_menu
 
 from phantomacr import phantomacr
 from phantomcbr import phantomcbr
-
+from contato import contato
 
 st.set_page_config(
     page_title='Seja Bem-Vindo'
@@ -75,5 +75,6 @@ app = MultiApp()
 app.add_app("Home Page", main)
 app.add_app("Phantom ACR", phantomacr)
 app.add_app("Phantom CBR", phantomcbr)
+app.add_app("Contato", contato)
 
 app.run()
