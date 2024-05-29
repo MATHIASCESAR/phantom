@@ -22,7 +22,7 @@ def contato():
 
     with col8:
         st.markdown('**INCA-Instituto Nacional do Câncer**')
-        st.caption('**_PQM-Programa de Qualidade em Mamográfia_**')
+        st.caption('**_PQM-Programa de Qualidade em Mamografia_**')
         st.markdown('<h8>sonia.silva@inca.gov.br</h8>', unsafe_allow_html=True)
         st.markdown('<h8>leonardo.travassos@inca.gov.br</h8>', unsafe_allow_html=True)
 
