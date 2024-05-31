@@ -39,7 +39,7 @@ class MultiApp:
         with st.sidebar:
             selected = option_menu(
                 menu_title='Menu',
-                options=['Home Page', 'Phantom ACR', 'Phantom CBR', 'Contato'],
+                options=['Home Page', 'Phantom ACR', 'Phantom MAMA', 'Contato'],
                 icons=['house-fill', 'cloud-upload-fill', 'cloud-upload-fill', 'envelope-heart-fill'],
                 menu_icon='menu-app-fill',
                 default_index=0,
@@ -74,7 +74,7 @@ def main():
 app = MultiApp()
 app.add_app("Home Page", main)
 app.add_app("Phantom ACR", phantomacr)
-app.add_app("Phantom CBR", phantomcbr)
+app.add_app("Phantom MAMA", phantomcbr)
 app.add_app("Contato", contato)
 
 app.run()
