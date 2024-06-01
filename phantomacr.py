@@ -106,7 +106,7 @@ def options():
             st.write(':blue[**Digite apenas números!**]')
 
 def phantomacr():
-    st.markdown('<h4>Informações do Serviço/**Phantom ACR**</h4>', unsafe_allow_html=True)
+    st.markdown('<h4>Informações do Serviço/Phantom ACR</h4>', unsafe_allow_html=True)
     nome = st.text_input('Razão Social')
     cnes = st.text_input('Identificação CNES')
     if any(not char.isdigit() for char in cnes):
@@ -125,7 +125,7 @@ def phantomacr():
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
     uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
-    submit_button = st.button('Confirmar')
+    submit_button = st.button('Enviar')
 
     if submit_button:
         if nome and uploaded_files:
