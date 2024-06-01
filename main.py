@@ -57,14 +57,15 @@ class MultiApp:
 def main():
     st.markdown("<h2 style='text-align: center; color: bold;'> Coleta das Imagens Phantom </h2>", unsafe_allow_html=True)
 
-    st.markdown('#### Instruções para envio e armazenamento da imagem')
+    st.markdown('#### Instruções para Preenchimento e Envio da(s) imagem(s)')
     st.write('''
-        1) Posicione o objeto simulador no mamógrafo, de forma que fique centralizado no detector;
-        2) Abaixe a bandeja de compressão para que ela apenas toque a parte superior do *phantom*;
-        3) Verifique se o sensor do Controle Automático de Exposição (CAE) está abaixo do centro do *phantom* e no mesmo posicionamento de aquisição anteriores;
-        4) Faça uma exposição usando os parâmetros clinicamente utilizados conforme o modelo do Phantom (ACR ou CBR);
-        5) Informar o nome do Serviço;
-        6) Selecionar a imagem e fazer o *UPLOAD*, conforme instruções;
+        1) No MENU ao lado, selecione o modelo de Phantom desejado, ACR ou MAMA;
+        2) No formulário, informe a Razão Social e a Identificação do CNES;
+        3) Selecione o Tipo de Equipamento, entre CR ou DR;
+        4) Em caso de Equipamentos CR, informar as métricas da Exposição;
+        5) Clique em "Browe Files" ou em "Drag and drop files here", para selecionar um ou mais arquivos DICOM;
+        6) Após selecionar o(s) arquivo(s), clique em ENVIAR e aguarde a Confirmação;
+        7) Em caso de dúvidas, use a opção CONTATO;
     ''')
 
     st.write('---')
