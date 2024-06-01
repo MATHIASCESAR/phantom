@@ -63,7 +63,7 @@ def main():
         2) No formulário, informe a Razão Social e a Identificação do CNES;
         3) Selecione o Tipo de Equipamento, entre CR ou DR;
         4) Em caso de Equipamentos CR, informar as métricas da Exposição;
-        5) Clique em "Browe Files" ou em "Drag and drop files here", para selecionar um ou mais arquivos DICOM;
+        5) Clique em "Browe Files" ou em "Drag and drop files here", para selecionar o(s) arquivo(s) DICOM;
         6) Após selecionar o(s) arquivo(s), clique em ENVIAR e aguarde a Confirmação;
         7) Em caso de dúvidas, use a opção CONTATO;
     ''')
