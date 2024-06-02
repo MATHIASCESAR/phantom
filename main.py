@@ -59,13 +59,14 @@ def main():
 
     st.markdown('#### Instruções para Preenchimento e Envio da(s) imagem(s)')
     st.write('''
-        1) No MENU ao lado, selecione o modelo de Phantom desejado, ACR ou MAMA;
-        2) No formulário, informe a Razão Social e a Identificação do CNES;
-        3) Selecione o Tipo de Equipamento, entre CR ou DR;
-        4) Em caso de Equipamentos CR, informar as métricas da Exposição;
-        5) Clique em "Browe Files" ou em "Drag and drop files here", para selecionar o(s) arquivo(s) DICOM;
-        6) Após selecionar o(s) arquivo(s), clique em ENVIAR e aguarde a Confirmação;
-        7) Em caso de dúvidas, use a opção CONTATO;
+        1) No :red[**MENU**] ao lado, selecione o modelo de Phantom desejado, :red[**ACR**] (Americano) ou :red[**MAMA**] (Nacional);
+        2) No formulário, informe a :red[**Razão Social**] e a :red[**Identificação do CNES**];
+        3) Selecione o Tipo de Equipamento, entre :red[**CR**] (Radiografia Convencional) ou :red[**DR**] (Radiografia Digital);
+        4) Em caso de Equipamentos :red[**CR**], informar as métricas da **Exposição** (:red[**KV, mAs e Combinação Alvo/Filtro**]);
+        5) Clique em :red[**Browe Files**] ou em :red[**Drag and drop files here**], para selecionar o(s) arquivo(s) DICOM;
+        6) Após selecionar o(s) arquivo(s), clique em :red[**ENVIAR**] e aguarde a Confirmação;
+        7) Em caso de dúvidas, use a opção :red[**CONTATO**];
+        8) Os campos :red[**_CNES, KV, mAs e Combinação Alvo/Filtro_**] aceitam apenas números!
     ''')
 
     st.write('---')

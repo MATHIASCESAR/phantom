@@ -16,10 +16,20 @@ class Cliente(Base):
     __tablename__ = 'clientes'
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
+    cnes = Column(String, nullable=False)
+    kv = Column(String, nullable=False)
+    mas = Column(String, nullable=False)
+    alvo_filtro = Column(String, nullable=False)
+
+def recreate_database():
+    # Exclui a tabela existente, se houver
+    Base.metadata.drop_all(engine)
+    # Cria a tabela novamente
+    Base.metadata.create_all(engine)
 
 # Criar a engine do banco de dados
 engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(engine)
+recreate_database()
 
 # Criar a sessão do banco de dados
 Session = sessionmaker(bind=engine)
@@ -88,7 +98,7 @@ def options():
     """,
     unsafe_allow_html=True
     )
-    
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -105,6 +115,8 @@ def options():
     if any(not char.isdigit() for char in alvo_filtro):
             st.write(':blue[**Digite apenas números!**]')
 
+    return kv, mas, alvo_filtro
+
 def phantomcbr():
     st.markdown('<h4>Informações do Serviço/Phantom MAMA</h4>', unsafe_allow_html=True)
     nome = st.text_input('Razão Social')
@@ -119,17 +131,18 @@ def phantomcbr():
 
     option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True)
 
+    kv, mas, alvo_filtro = '', '', ''
     if option == 'CR':
-        options()
+        kv, mas, alvo_filtro = options()
 
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
     uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
-    submit_button = st.button('Enviar')
+    submit_button = st.button('Enviar', type='primary')
 
     if submit_button:
-        if nome and uploaded_files:
-            novo_cliente = Cliente(nome=nome)
+        if nome and cnes and kv and mas and alvo_filtro and uploaded_files:
+            novo_cliente = Cliente(nome=nome, cnes=cnes, kv=kv, mas=mas, alvo_filtro=alvo_filtro)
             session.add(novo_cliente)
             session.commit()
 
@@ -160,10 +173,10 @@ def phantomcbr():
 
                 try:
                     dicom_data = pydicom.dcmread(file_path)
-                    st.subheader(f'Informações do Arquivo DICOM: {sanitized_filename}')
-                    st.text(f'Patient Name: {dicom_data.PatientName}')
-                    st.text(f'Modality: {dicom_data.Modality}')
-                    st.text(f'Study Date: {dicom_data.StudyDate}')
+                    #st.subheader(f'Informações do Arquivo DICOM: {sanitized_filename}')
+                    #st.text(f'Patient Name: {dicom_data.PatientName}')
+                    #st.text(f'Modality: {dicom_data.Modality}')
+                    #st.text(f'Study Date: {dicom_data.StudyDate}')
                 except Exception as e:
                     st.error(f'Erro ao ler o arquivo DICOM: {e}')
             
