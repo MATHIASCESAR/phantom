@@ -1,11 +1,15 @@
 import os
 import zipfile
 import streamlit as st
+import time
 import pydicom
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from b2sdk.v2 import B2Api, InMemoryAccountInfo, UploadSourceBytes
+import streamlit.components.v1 as components
+from streamlit_modal import Modal
+
 
 # Configuração do banco de dados
 DATABASE_URL = 'sqlite:///clientes.db'
@@ -102,45 +106,94 @@ def options():
     col1, col2 = st.columns(2)
 
     with col1:
-        kv = st.text_input('**KV**')
+        kv = st.text_input('**KV:**', placeholder="Digite apenas números", key='kv')
         if any(not char.isdigit() for char in kv):
             st.write(':blue[**Digite apenas números!**]')
 
     with col2:
-        mas = st.text_input('**mAs**')
+        mas = st.text_input('**mAs:**', placeholder="Digite apenas números", key='mas')
         if any(not char.isdigit() for char in mas):
             st.write(':blue[**Digite apenas números!**]')
 
-    alvo_filtro = st.text_input('**Combinação Alvo/Filtro**')
+    alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', placeholder="Digite apenas números", key='alvo_filtro')
     if any(not char.isdigit() for char in alvo_filtro):
             st.write(':blue[**Digite apenas números!**]')
 
     return kv, mas, alvo_filtro
 
+
+
+for key in ['enviar', 'uploader', 'option']:
+    if key not in st.session_state:
+        st.session_state[key] = True
+
+
+
+def botao():
+    bt1, bt2, bt3 = st.columns([3,1,4])
+
+    with bt1:
+        st.write('')
+    with bt2:
+        sim = st.button('Sim', type='primary', on_click=limpar_campos)
+        if sim:
+            st.session_state["file_uploader_key"] += 1
+            st.experimental_rerun()
+    with bt3:
+        st.write('')
+
+
+def limpar_campos():
+    for key in ['nome', 'kv', 'cnes', 'mas', 'alvo_filtro', 'file_uploader_key']:     
+        st.session_state[key] = ''
+
+
+    
+    for k in ['enviar', 'uploader', 'option']:
+        st.session_state[k] = True
+
+
+def desativar_campos():
+    for key in ['enviar', 'uploader', 'option']:
+        st.session_state[key] = False
+
+
 def phantomcbr():
+       
     st.markdown('<h4>Informações do Serviço/Phantom MAMA</h4>', unsafe_allow_html=True)
-    nome = st.text_input('Razão Social')
-    cnes = st.text_input('Identificação CNES')
+    nome = st.text_input('**Razão Social:**', key='nome')
+    cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes')
     if any(not char.isdigit() for char in cnes):
         st.write(':blue[**Digite apenas números!**]')
 
     st.markdown('---', unsafe_allow_html=True)
 
+
     if "disabled" not in st.session_state:
         st.session_state.disabled = False
 
-    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True)
+    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True,
+                      disabled=not st.session_state['option'])
 
     kv, mas, alvo_filtro = '', '', ''
     if option == 'CR':
         kv, mas, alvo_filtro = options()
+    elif option == 'DR':
+        kv, mas, alvo_filtro = '0', '0', '0'  # Atribuir valores zerados para DR
 
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
-    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
-    submit_button = st.button('Enviar', type='primary')
+
+
+    if "file_uploader_key" not in st.session_state:
+        st.session_state["file_uploader_key"] = 0
+
+    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, disabled=not st.session_state['uploader'], key=st.session_state["file_uploader_key"])
+    submit_button = st.button('Enviar', type='primary', on_click=desativar_campos, disabled=not st.session_state['enviar'])
 
     if submit_button:
+        alerta = st.warning('Favor Aguardar a CONFIRMAÇÃO do envio! Em andamento...', icon='⚠️')
+         
         if nome and cnes and kv and mas and alvo_filtro and uploaded_files:
             novo_cliente = Cliente(nome=nome, cnes=cnes, kv=kv, mas=mas, alvo_filtro=alvo_filtro)
             session.add(novo_cliente)
@@ -182,25 +235,38 @@ def phantomcbr():
             
             zip_path = os.path.join(client_folder, f'{sanitized_name}.zip')
             compress_files(dcm_files, zip_path)
-
-            alerta = st.warning('Favor Aguardar a CONFIRMAÇÃO do envio! Em andamento...', icon='⚠️')
+                        
             try:
                 upload_to_b2_chunked('0023525a40197c60000000001', 'K002lukJuxRdegDgWgkfo6Uws0BZ9LM', 'macesar', zip_path, sanitized_name, update_progress)
                 alerta.empty()
-                mensagem(f'Arquivo(s) ENVIADO(s) com sucesso!', blinking=True)
+                #mensagem(f'Arquivo(s) ENVIADO(s) com sucesso!', blinking=True)
+
             except Exception as e:
                 alerta.empty()
                 st.error(f'Erro ao fazer upload para a NUVEM B2: {e}')
                 
             try:
                 upload_to_b2_chunked('0023525a40197c60000000001', 'K002lukJuxRdegDgWgkfo6Uws0BZ9LM', 'macesar', 'clientes.db', 'database_backup', update_progress)
+            
+                
+            
             except Exception as e:
                 st.error(f'Erro ao fazer upload do banco de dados para a Nuvem B2: {e}')
-
+            
             progress_text.text('')
             progress_bar.empty()
+            mycode = "<script>alert('Arquivo(s) ENVIADO(s) com sucesso!')</script>"
+            components.html(mycode, height=0, width=0)
+            st.markdown('---', unsafe_allow_html=True)
+
+            if progress_text.empty():
+                  mensagem('Deseja ENVIAR novo(s) Arquivo(s)', blinking=True)
+                  botao()
+
         else:
             st.error('Por favor, preencha todos os campos e faça o upload de pelo menos um arquivo DICOM.')
-
+    st.markdown('---', unsafe_allow_html=True)
+    
+    
 if __name__ == '__main__':
     phantomcbr()
