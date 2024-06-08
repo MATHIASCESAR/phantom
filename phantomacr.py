@@ -39,6 +39,7 @@ recreate_database()
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
 def mensagem(message, blinking=False):
     css = """
     @keyframes blink {
@@ -123,6 +124,8 @@ def options():
 
 
 
+
+
 for key in ['enviar', 'uploader', 'option']:
     if key not in st.session_state:
         st.session_state[key] = True
@@ -159,8 +162,21 @@ def desativar_campos():
 
 
 def phantomacr():
+
+    col1, col2, col3 = st.columns([4, 1, 7])
+
+
+    with col1:
+        st.write('')
+
+    with col2:
+        logo_image = "phantomACR.png"
+        st.image(logo_image, width=50)
+
+    with col3:
+        st.markdown('<h4>Phantom ACR</h4>', unsafe_allow_html=True)
        
-    st.markdown('<h4>Informações do Serviço/Phantom ACR</h4>', unsafe_allow_html=True)
+    st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
     nome = st.text_input('**Razão Social:**', key='nome')
     cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes')
     if any(not char.isdigit() for char in cnes):

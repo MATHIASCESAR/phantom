@@ -159,8 +159,17 @@ def desativar_campos():
 
 
 def phantomcbr():
+    col1, col2, col3 = st.columns([4, 1, 7])
+
+    with col1:
+        st.write('')
+    with col2:
+        logo_image = "phantomMAMA.png"
+        st.image(logo_image, width=50)
+    with col3:
+        st.markdown('<h4>Phantom MAMA</h4>', unsafe_allow_html=True)
        
-    st.markdown('<h4>Informações do Serviço/Phantom MAMA</h4>', unsafe_allow_html=True)
+    st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
     nome = st.text_input('**Razão Social:**', key='nome')
     cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes')
     if any(not char.isdigit() for char in cnes):
