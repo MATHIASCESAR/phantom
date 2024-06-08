@@ -3,3 +3,4 @@ pydicom
 sqlalchemy
 streamlit_option_menu
 b2sdk
+streamlit_modal
