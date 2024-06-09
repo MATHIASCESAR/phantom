@@ -106,27 +106,20 @@ def options():
     col1, col2 = st.columns(2)
 
     with col1:
-        kv = st.text_input('**KV:**', placeholder="Digite apenas números", key='kv')
+        kv = st.text_input('**KV:**', placeholder="Digite apenas números")
         if any(not char.isdigit() for char in kv):
             st.write(':blue[**Digite apenas números!**]')
 
     with col2:
-        mas = st.text_input('**mAs:**', placeholder="Digite apenas números", key='mas')
+        mas = st.text_input('**mAs:**', placeholder="Digite apenas números")
         if any(not char.isdigit() for char in mas):
             st.write(':blue[**Digite apenas números!**]')
 
-    alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', placeholder="Digite apenas números", key='alvo_filtro')
+    alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', placeholder="Digite apenas números")
     if any(not char.isdigit() for char in alvo_filtro):
             st.write(':blue[**Digite apenas números!**]')
 
     return kv, mas, alvo_filtro
-
-
-
-for key in ['enviar', 'uploader', 'option']:
-    if key not in st.session_state:
-        st.session_state[key] = True
-
 
 
 def botao():
@@ -135,45 +128,22 @@ def botao():
     with bt1:
         st.write('')
     with bt2:
-        sim = st.button('Sim', type='primary', on_click=limpar_campos)
-        if sim:
-            st.session_state["file_uploader_key"] += 1
-            st.experimental_rerun()
+        sim = st.button('Sim', type='primary')
     with bt3:
         st.write('')
-
-
-def limpar_campos():
-    for key in ['nome', 'kv', 'cnes', 'mas', 'alvo_filtro', 'file_uploader_key']:     
-        st.session_state[key] = ''
-
-
-    
-    for k in ['enviar', 'uploader', 'option']:
-        st.session_state[k] = True
-
-
-def desativar_campos():
-    for key in ['enviar', 'uploader', 'option']:
-        st.session_state[key] = False
 
 
 def phantomacr():
        
     st.markdown('<h4>Informações do Serviço/Phantom ACR</h4>', unsafe_allow_html=True)
-    nome = st.text_input('**Razão Social:**', key='nome')
-    cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes')
+    nome = st.text_input('**Razão Social:**')
+    cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números")
     if any(not char.isdigit() for char in cnes):
         st.write(':blue[**Digite apenas números!**]')
 
     st.markdown('---', unsafe_allow_html=True)
 
-
-    if "disabled" not in st.session_state:
-        st.session_state.disabled = False
-
-    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True,
-                      disabled=not st.session_state['option'])
+    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True)
 
     kv, mas, alvo_filtro = '', '', ''
     if option == 'CR':
@@ -184,12 +154,8 @@ def phantomacr():
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
 
-
-    if "file_uploader_key" not in st.session_state:
-        st.session_state["file_uploader_key"] = 0
-
-    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, disabled=not st.session_state['uploader'], key=st.session_state["file_uploader_key"])
-    submit_button = st.button('Enviar', type='primary', on_click=desativar_campos, disabled=not st.session_state['enviar'])
+    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
+    submit_button = st.button('Enviar', type='primary')
 
     if submit_button:
         alerta = st.warning('Favor Aguardar a CONFIRMAÇÃO do envio! Em andamento...', icon='⚠️')
