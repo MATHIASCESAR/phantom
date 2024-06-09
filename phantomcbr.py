@@ -39,6 +39,7 @@ recreate_database()
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
 def mensagem(message, blinking=False):
     css = """
     @keyframes blink {
@@ -123,10 +124,11 @@ def options():
 
 
 
+
+
 for key in ['enviar', 'uploader', 'option']:
     if key not in st.session_state:
         st.session_state[key] = True
-
 
 
 def botao():
@@ -159,6 +161,7 @@ def desativar_campos():
 
 
 def phantomcbr():
+
     col1, col2, col3 = st.columns([4, 1, 7])
 
     with col1:
@@ -196,6 +199,10 @@ def phantomcbr():
 
     if "file_uploader_key" not in st.session_state:
         st.session_state["file_uploader_key"] = 0
+
+    if "uploaded_files" not in st.session_state:
+        st.session_state["uploaded_files"] = []
+
 
     uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, disabled=not st.session_state['uploader'], key=st.session_state["file_uploader_key"])
     submit_button = st.button('Enviar', type='primary', on_click=desativar_campos, disabled=not st.session_state['enviar'])
