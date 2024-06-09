@@ -123,7 +123,12 @@ def options():
     return kv, mas, alvo_filtro
 
 
+def initialize_session_state_keys():
+    for key in ['enviar', 'uploader', 'option', 'file_uploader_key', 'disabled']:
+        if key not in st.session_state:
+            st.session_state[key] = True if key != 'file_uploader_key' else 0
 
+initialize_session_state_keys()
 
 
 for key in ['enviar', 'uploader', 'option']:
@@ -149,8 +154,6 @@ def limpar_campos():
     for key in ['nome', 'kv', 'cnes', 'mas', 'alvo_filtro', 'file_uploader_key']:     
         st.session_state[key] = ''
 
-
-    
     for k in ['enviar', 'uploader', 'option']:
         st.session_state[k] = True
 
@@ -191,7 +194,7 @@ def phantomcbr():
     if option == 'CR':
         kv, mas, alvo_filtro = options()
     elif option == 'DR':
-        kv, mas, alvo_filtro = '0', '0', '0'  # Atribuir valores zerados para DR
+        kv, mas, alvo_filtro = '0', '0', '0'
 
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)

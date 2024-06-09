@@ -123,7 +123,12 @@ def options():
     return kv, mas, alvo_filtro
 
 
+def initialize_session_state_keys():
+    for key in ['enviar', 'uploader', 'option', 'file_uploader_key', 'disabled']:
+        if key not in st.session_state:
+            st.session_state[key] = True if key != 'file_uploader_key' else 0
 
+initialize_session_state_keys()
 
 
 for key in ['enviar', 'uploader', 'option']:
