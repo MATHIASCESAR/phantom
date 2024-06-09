@@ -39,7 +39,6 @@ recreate_database()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-
 def mensagem(message, blinking=False):
     css = """
     @keyframes blink {
@@ -123,17 +122,11 @@ def options():
     return kv, mas, alvo_filtro
 
 
-def initialize_session_state_keys():
-    for key in ['enviar', 'uploader', 'option', 'file_uploader_key', 'disabled']:
-        if key not in st.session_state:
-            st.session_state[key] = True if key != 'file_uploader_key' else 0
-
-initialize_session_state_keys()
-
 
 for key in ['enviar', 'uploader', 'option']:
     if key not in st.session_state:
         st.session_state[key] = True
+
 
 
 def botao():
@@ -166,18 +159,8 @@ def desativar_campos():
 
 
 def phantomacr():
-
-    col1, col2, col3 = st.columns([4, 1, 7])
-
-    with col1:
-        st.write('')
-    with col2:
-        logo_image = "phantomACR.png"
-        st.image(logo_image, width=50)
-    with col3:
-        st.markdown('<h4>Phantom ACR</h4>', unsafe_allow_html=True)
        
-    st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
+    st.markdown('<h4>Informações do Serviço/Phantom ACR</h4>', unsafe_allow_html=True)
     nome = st.text_input('**Razão Social:**', key='nome')
     cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes')
     if any(not char.isdigit() for char in cnes):
@@ -204,10 +187,6 @@ def phantomacr():
 
     if "file_uploader_key" not in st.session_state:
         st.session_state["file_uploader_key"] = 0
-
-    if "uploaded_files" not in st.session_state:
-        st.session_state["uploaded_files"] = []
-
 
     uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, disabled=not st.session_state['uploader'], key=st.session_state["file_uploader_key"])
     submit_button = st.button('Enviar', type='primary', on_click=desativar_campos, disabled=not st.session_state['enviar'])
