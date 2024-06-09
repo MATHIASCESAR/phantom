@@ -129,13 +129,31 @@ def botao():
         st.write('')
     with bt2:
         sim = st.button('Sim', type='primary')
+        st.session_state["file_uploader_key"] += 1
+        st.experimental_rerun()
     with bt3:
         st.write('')
 
 
 def phantomacr():
+
+    for key in ['enviar', 'uploader', 'option', 'file_uploader_key']:
+        if key not in st.session_state:
+            st.session_state[key] = True
+
+    col1, col2, col3 = st.columns([4, 1, 7])
+
+    with col1:
+        st.write('')
+    with col2:
+        logo_image = "phantomACR.png"
+        st.image(logo_image, width=50)
+    with col3:
+        st.markdown('<h4>Phantom ACR</h4>', unsafe_allow_html=True)
+
+   
        
-    st.markdown('<h4>Informações do Serviço/Phantom ACR</h4>', unsafe_allow_html=True)
+    st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
     nome = st.text_input('**Razão Social:**')
     cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números")
     if any(not char.isdigit() for char in cnes):
@@ -154,7 +172,7 @@ def phantomacr():
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
 
-    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
+    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, key=st.session_state["file_uploader_key"])
     submit_button = st.button('Enviar', type='primary')
 
     if submit_button:
@@ -225,9 +243,9 @@ def phantomacr():
             components.html(mycode, height=0, width=0)
             st.markdown('---', unsafe_allow_html=True)
 
-            if progress_text.empty():
-                  mensagem('Deseja ENVIAR novo(s) Arquivo(s)', blinking=True)
-                  botao()
+            #if progress_text.empty():
+                #mensagem('Deseja ENVIAR novo(s) Arquivo(s)', blinking=True)
+            botao()
 
         else:
             st.error('Por favor, preencha todos os campos e faça o upload de pelo menos um arquivo DICOM.')
