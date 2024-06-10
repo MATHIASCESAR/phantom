@@ -106,21 +106,33 @@ def options():
     col1, col2 = st.columns(2)
 
     with col1:
-        kv = st.text_input('**KV:**', placeholder="Digite apenas números", key='kv')
+        kv = st.text_input('**KV:**', placeholder="Digite apenas números", key='kv_text', help='Medida da tensão elétrica utilizada no tubo de raios-X (Kilovolt)')
         if any(not char.isdigit() for char in kv):
             st.write(':blue[**Digite apenas números!**]')
 
     with col2:
-        mas = st.text_input('**mAs:**', placeholder="Digite apenas números", key='mas')
+        mas = st.text_input('**mAs:**', placeholder="Digite apenas números", key='mas_text', help='medida da quantidade de radiação usada para obter uma imagem(miliAmpere-segundo)')
         if any(not char.isdigit() for char in mas):
             st.write(':blue[**Digite apenas números!**]')
 
-    alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', placeholder="Digite apenas números", key='alvo_filtro')
-    if any(not char.isdigit() for char in alvo_filtro):
-            st.write(':blue[**Digite apenas números!**]')
+    alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', key='alvo_text', help='Informar a combinação do material do alvo e do filtro usados no tubo de raios-X')
 
     return kv, mas, alvo_filtro
 
+def limpar_text():
+    st.session_state["nome_text"] = ""
+    st.session_state["cnes_text"] = ""
+    st.session_state["kv_text"] = ""
+    st.session_state["mas_text"] = ""
+    st.session_state["alvo_text"] = ""
+
+def botao_ok():
+    col1, col2 = st.columns([2,2])
+
+    with col1:
+        mensagem(f'Arquivo(s) ENVIADO(s) com sucesso! Clique em', blinking=True)
+    with col2:
+        st.button('OK', type='primary', on_click=limpar_text)
 
 
 def phantomcbr():
@@ -136,15 +148,15 @@ def phantomcbr():
         st.markdown('<h4>Phantom MAMA</h4>', unsafe_allow_html=True)
        
     st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
-    nome = st.text_input('**Razão Social:**', key='nome')
-    cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes')
+    nome = st.text_input('**Razão Social:**', key='nome_text')
+    cnes = st.text_input('**Identificação CNES:**', placeholder="Digite apenas números", key='cnes_text', help='Favor informar o número do Cadastro Nacional de Estabelecimentos em Saúde')
     if any(not char.isdigit() for char in cnes):
         st.write(':blue[**Digite apenas números!**]')
 
     st.markdown('---', unsafe_allow_html=True)
 
 
-    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True)
+    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True, help='Selecione entre Mamográfica Convencional(CR) ou Mamografica Digital(DR)')
 
     kv, mas, alvo_filtro = '', '', ''
     if option == 'CR':
@@ -155,11 +167,19 @@ def phantomcbr():
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
 
+    if "file_uploader_key" not in st.session_state:
+            st.session_state["file_uploader_key"] = 0
 
-    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True)
+    if "uploaded_files" not in st.session_state:
+        st.session_state["uploaded_files"] = []
+
+
+    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, key=st.session_state["file_uploader_key"], help='Selecione um ou mais arquivos de Imagem .DCM')
     submit_button = st.button('Enviar', type='primary')
 
     if submit_button:
+
+
         alerta = st.warning('Favor Aguardar a CONFIRMAÇÃO do envio! Em andamento...', icon='⚠️')
         if nome and cnes and kv and mas and alvo_filtro and uploaded_files:
             novo_cliente = Cliente(nome=nome, cnes=cnes, kv=kv, mas=mas, alvo_filtro=alvo_filtro)
@@ -221,12 +241,12 @@ def phantomcbr():
             progress_bar.empty()
             mycode = "<script>alert('Arquivo(s) ENVIADO(s) com sucesso!')</script>"
             components.html(mycode, height=0, width=0)
+            st.session_state["file_uploader_key"] += 1
+            st.experimental_rerun()
+            st.markdown('---', unsafe_allow_html=True)
 
-            
         else:
             st.error('Por favor, preencha todos os campos e faça o upload de pelo menos um arquivo DICOM.')
-    st.markdown('---', unsafe_allow_html=True)
-    
 
 if __name__ == '__main__':
     phantomcbr()
