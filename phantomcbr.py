@@ -119,6 +119,10 @@ def options():
 
     return kv, mas, alvo_filtro
 
+
+
+
+
 def limpar_text():
     st.session_state["nome_text"] = ""
     st.session_state["cnes_text"] = ""
@@ -126,23 +130,24 @@ def limpar_text():
     st.session_state["mas_text"] = ""
     st.session_state["alvo_text"] = ""
 
-def botao_ok():
-    col1, col2 = st.columns([2,2])
+    st.session_state["file_uploader_key"] += 1
 
-    with col1:
-        mensagem(f'Arquivo(s) ENVIADO(s) com sucesso! Clique em', blinking=True)
-    with col2:
-        st.button('OK', type='primary', on_click=limpar_text)
 
 
 def phantomcbr():
+
+    if "file_uploader_key" not in st.session_state:
+        st.session_state["file_uploader_key"] = 0
+
+    if "uploaded_files" not in st.session_state:
+        st.session_state["uploaded_files"] = []
 
     col1, col2, col3 = st.columns([4, 1, 7])
 
     with col1:
         st.write('')
     with col2:
-        logo_image = "phantomMAMA.png"
+        logo_image = "https://github.com/MATHIASCESAR/phantom//blob/meu_app/phantomMAMA.png?raw=true"
         st.image(logo_image, width=50)
     with col3:
         st.markdown('<h4>Phantom MAMA</h4>', unsafe_allow_html=True)
@@ -156,7 +161,7 @@ def phantomcbr():
     st.markdown('---', unsafe_allow_html=True)
 
 
-    option = st.radio('**Selecione o Tipo de Equipamento**', ['CR', 'DR'], horizontal=True, help='Selecione entre Mamográfica Convencional(CR) ou Mamografica Digital(DR)')
+    option = st.radio('**Selecione o Tipo de Equipamento:**', ['CR', 'DR'], horizontal=True, help='Selecione entre Mamográfica Convencional(CR) ou Mamografica Digital(DR)')
 
     kv, mas, alvo_filtro = '', '', ''
     if option == 'CR':
@@ -167,20 +172,16 @@ def phantomcbr():
     st.markdown('---', unsafe_allow_html=True)
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
 
-    if "file_uploader_key" not in st.session_state:
-            st.session_state["file_uploader_key"] = 0
-
-    if "uploaded_files" not in st.session_state:
-        st.session_state["uploaded_files"] = []
 
 
-    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, key=st.session_state["file_uploader_key"], help='Selecione um ou mais arquivos de Imagem .DCM')
+
+    uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, help='Selecione um ou mais arquivos de Imagem .DCM', key=st.session_state["file_uploader_key"])
     submit_button = st.button('Enviar', type='primary')
-
+    
+   
     if submit_button:
+        alerta = st.warning('Favor Aguardar a **CONFIRMAÇÃO** do envio! Em andamento...', icon='⚠️')
 
-
-        alerta = st.warning('Favor Aguardar a CONFIRMAÇÃO do envio! Em andamento...', icon='⚠️')
         if nome and cnes and kv and mas and alvo_filtro and uploaded_files:
             novo_cliente = Cliente(nome=nome, cnes=cnes, kv=kv, mas=mas, alvo_filtro=alvo_filtro)
             session.add(novo_cliente)
@@ -239,14 +240,25 @@ def phantomcbr():
 
             progress_text.text('')
             progress_bar.empty()
-            mycode = "<script>alert('Arquivo(s) ENVIADO(s) com sucesso!')</script>"
-            components.html(mycode, height=0, width=0)
-            st.session_state["file_uploader_key"] += 1
-            st.experimental_rerun()
+            mensagem(f'Arquivo(s) ENVIADO(s) com sucesso!', blinking=True)
+            #mycode = "<script>alert('Arquivo(s) ENVIADO(s) com sucesso!')</script>"
+            #components.html(mycode, height=0, width=0)        
+            #st.session_state["file_uploader_key"] += 1
+            #st.experimental_rerun()
             st.markdown('---', unsafe_allow_html=True)
+
+            if progress_bar.empty():    
+                
+                col3, col4 = st.columns([3,1])
+                with col3:                          
+                    st.markdown('<h4>Clique no OK para enviar novos Arquivos!</h4>', unsafe_allow_html=True)
+                with col4:
+                    st.button('OK', on_click=limpar_text, type='primary')
+            
 
         else:
             st.error('Por favor, preencha todos os campos e faça o upload de pelo menos um arquivo DICOM.')
+
 
 if __name__ == '__main__':
     phantomcbr()
