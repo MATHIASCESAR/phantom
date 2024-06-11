@@ -103,7 +103,8 @@ def options():
     unsafe_allow_html=True
     )
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
+    
 
     with col1:
         kv = st.text_input('**KV:**', placeholder="Digite apenas números", key='kv_text', help='Medida da tensão elétrica utilizada no tubo de raios-X (Kilovolt)')
@@ -111,11 +112,19 @@ def options():
             st.write(':blue[**Digite apenas números!**]')
 
     with col2:
-        mas = st.text_input('**mAs:**', placeholder="Digite apenas números", key='mas_text', help='medida da quantidade de radiação usada para obter uma imagem(miliAmpere-segundo)')
+        mas = st.text_input('**mAs:**', placeholder="Digite apenas números", key='mas_text', help='Medida da quantidade de radiação usada para obter uma imagem(miliAmpere-segundo)')
         if any(not char.isdigit() for char in mas):
             st.write(':blue[**Digite apenas números!**]')
+    
+    with col3:
+            options = ['Mo/Mo', 'Rh/Rh', 'Mo/Rh', 'W/Rh']
+            selected_option = st.radio("Combinação Alvo/Filtro:", options, horizontal=True, index=None)
 
-    alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', key='alvo_text', help='Informar a combinação do material do alvo e do filtro usados no tubo de raios-X')
+ 
+            # Display the selected option
+            alvo_filtro = selected_option
+            
+            #alvo_filtro = st.text_input('**Combinação Alvo/Filtro:**', key='alvo_text', help='Informar a combinação do material do alvo e do filtro usados no tubo de raios-X')
 
     return kv, mas, alvo_filtro
 
@@ -128,9 +137,10 @@ def limpar_text():
     st.session_state["cnes_text"] = ""
     st.session_state["kv_text"] = ""
     st.session_state["mas_text"] = ""
-    st.session_state["alvo_text"] = ""
+    #st.session_state["alvo_text"] = ""
 
     st.session_state["file_uploader_key"] += 1
+
 
 
 
@@ -141,6 +151,10 @@ def phantomacr():
 
     if "uploaded_files" not in st.session_state:
         st.session_state["uploaded_files"] = []
+
+
+    if "nome" not in st.session_state:
+        st.session_state["nome"] = True
 
     col1, col2, col3 = st.columns([4, 1, 7])
 
@@ -163,6 +177,9 @@ def phantomacr():
 
     option = st.radio('**Selecione o Tipo de Equipamento:**', ['CR', 'DR'], horizontal=True, help='Selecione entre Mamográfica Convencional(CR) ou Mamografica Digital(DR)')
 
+    st.markdown('---', unsafe_allow_html=True)
+    st.write('**Avaliação da Qualidade da Imagem do Simulador**', help='Informar a combinação do material do alvo e do filtro usados no tubo de raios-X')
+
     kv, mas, alvo_filtro = '', '', ''
     if option == 'CR':
         kv, mas, alvo_filtro = options()
@@ -173,8 +190,7 @@ def phantomacr():
     st.markdown('<h4>Upload da Imagem Phantom:</h4>', unsafe_allow_html=True)
 
 
-
-
+   
     uploaded_files = st.file_uploader('Escolha os arquivos de imagem .DCM', type=['dcm'], accept_multiple_files=True, help='Selecione um ou mais arquivos de Imagem .DCM', key=st.session_state["file_uploader_key"])
     submit_button = st.button('Enviar', type='primary')
     
@@ -247,13 +263,12 @@ def phantomacr():
             #st.experimental_rerun()
             st.markdown('---', unsafe_allow_html=True)
 
-            if progress_bar.empty():    
-                
+            if progress_bar.empty():
                 col3, col4 = st.columns([3,1])
                 with col3:                          
-                    st.markdown('<h4>Clique no OK para enviar novos Arquivos!</h4>', unsafe_allow_html=True)
+                    st.markdown('<h4>Clique em SIM se deseja enviar mais arquivos!</h4>', unsafe_allow_html=True)
                 with col4:
-                    st.button('OK', on_click=limpar_text, type='primary')
+                    st.button('SIM', on_click=limpar_text, type='primary')
             
 
         else:
