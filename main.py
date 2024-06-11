@@ -66,7 +66,7 @@ def main():
         5) Clique em :red[**Browe Files**] ou em :red[**Drag and drop files here**], para selecionar o(s) arquivo(s) DICOM;
         6) Após selecionar o(s) arquivo(s), clique em :red[**ENVIAR**] e aguarde a Confirmação;
         7) Em caso de dúvidas, use a opção :red[**CONTATO**];
-        8) Os campos :red[**_CNES, KV, mAs e Combinação Alvo/Filtro_**] aceitam apenas números!
+        8) Os campos :red[**_CNES, KV, mAs_**] aceitam apenas números!
     ''')
 
     st.write('---')
