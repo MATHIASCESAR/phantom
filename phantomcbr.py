@@ -164,7 +164,7 @@ def phantomcbr():
         logo_image = "https://github.com/MATHIASCESAR/phantom//blob/meu_app/phantomMAMA.png?raw=true"
         st.image(logo_image, width=50)
     with col3:
-        st.markdown('<h4>Phantom ACR</h4>', unsafe_allow_html=True)
+        st.markdown('<h4>Phantom MAMA</h4>', unsafe_allow_html=True)
        
     st.markdown('<h4>Informações do Serviço</h4>', unsafe_allow_html=True)
     nome = st.text_input('**Razão Social:**', key='nome_text')
