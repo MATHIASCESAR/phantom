@@ -62,7 +62,7 @@ def main():
         1) No :red[**MENU**] ao lado, selecione o modelo de Phantom desejado, :red[**ACR**] (Americano) ou :red[**MAMA**] (Nacional);
         2) No formulário, informe a :red[**Razão Social**] e a :red[**Identificação do CNES**];
         3) Selecione o Tipo de Equipamento, entre :red[**CR**] (Radiografia Convencional) ou :red[**DR**] (Radiografia Digital);
-        4) Em caso de Equipamentos :red[**CR**], informar as métricas da **Exposição** (:red[**KV, mAs e Combinação Alvo/Filtro**]);
+        4) Em caso de Equipamentos :red[**CR**], informar os parâmetros da **Exposição** (:red[**KV, mAs e Combinação Alvo/Filtro**]);
         5) Clique em :red[**Browe Files**] ou em :red[**Drag and drop files here**], para selecionar o(s) arquivo(s) DICOM;
         6) Após selecionar o(s) arquivo(s), clique em :red[**ENVIAR**] e aguarde a Confirmação;
         7) Em caso de dúvidas, use a opção :red[**CONTATO**];
