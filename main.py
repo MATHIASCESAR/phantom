@@ -55,7 +55,7 @@ class MultiApp:
 
 
 def main():
-    st.markdown("<h2 style='text-align: center; color: bold;'> Coleta das Imagens Phantom </h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: bold;'> Upload das Imagens Phantom </h2>", unsafe_allow_html=True)
 
     st.markdown('#### Instruções para Preenchimento e Envio da(s) imagem(s)')
     st.write('''
